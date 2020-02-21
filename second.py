@@ -4,16 +4,24 @@ from urllib2 import urlopen
 import re
 import requests
 
-son_html = urlopen('https://www.youtube.com/watch?v=cXP8OxMN_SQ').read().decode('utf-8')
+son_url = 'https://www.youtube.com/watch?v=cXP8OxMN_SQ'
+son_html = urlopen(son_url).read().decode('utf-8')
 son_soup = BeautifulSoup(son_html, 'lxml')
 
 # get the title of the video and print it.
 for title in son_soup.find_all('h1'):
-    new_title = title.span
-print(new_title.string)
+    the_title = title.span
+new_title = the_title.string
+
+print(new_title.strip())
+
+import os
+if not os.path.exists(new_title.strip()):
+    os.makedirs(new_title.strip())
+print("Creat and Exam the Dir Successfully")
 
 #get the url to get img.
-m = re.search('(?<=v=)...........', 'https://www.youtube.com/watch?v=cXP8OxMN_SQ')
+m = re.search('(?<=v=)...........', son_url)
 
 #download the cover
 cover_url = ('https://i.ytimg.com/vi/' + m.group(0) + '/maxresdefault.jpg')
