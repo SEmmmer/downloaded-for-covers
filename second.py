@@ -7,8 +7,10 @@ son_html = urlopen('https://www.youtube.com/watch?v=cXP8OxMN_SQ').read().decode(
 son_soup = BeautifulSoup(son_html, 'lxml')
 
 for title in son_soup.find_all('h1'):
-    print(title)
+    # print(title)
 
+    new_title = title.span
+print(new_title.string)
 m = re.search('(?<=v=)...........', 'https://www.youtube.com/watch?v=cXP8OxMN_SQ')
 m.group(0)
 print(m.group(0))
