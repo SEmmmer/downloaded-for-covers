@@ -5,7 +5,7 @@ from urllib2 import urlopen
 
 # import requests
 
-html = urlopen("file:///Users/yangjinghua/shirakamifubuki.htm")
+html = urlopen("file:///Users/yangjinghua/Documents/a%20Python%20program/shirakamifubuki.htm")
 soup = BeautifulSoup(html, 'lxml')
 all_href = soup.find_all('a')
 
@@ -34,15 +34,6 @@ import os
 if not os.path.exists('ytb'):
     os.makedirs('ytb')
 print("Creat and Exam the Dir Successfully")
-
-for link in l3:
-    son_html = urlopen(link)
-    son_soup = BeautifulSoup(son_html, 'lxml')
-    all_info = son_soup.find_all('yt-formatted-string')
-
-
-
-
 
 
 
