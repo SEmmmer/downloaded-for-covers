@@ -20,15 +20,22 @@ if not os.path.exists(new_title.strip()):
     os.makedirs(new_title.strip())
 print("Creat and Exam the Dir Successfully")
 
-#get the url to get img.
+#get the url of the cover.
 m = re.search('(?<=v=)...........', son_url)
 
 #download the cover
 cover_url = ('https://i.ytimg.com/vi/' + m.group(0) + '/maxresdefault.jpg')
-print(cover_url)
 r = requests.get(cover_url, stream=True)
-image_name = cover_url.split('/')[-1]
-with open('test/%s' % image_name, 'wb') as f:
-    for chunk in r.iter_content(chunk_size=128):
-        f.write(chunk)
+image_name = (new_title.strip()+'.jpg')
+with open((new_title.strip()+'/'+image_name), 'wb') as f:
+    f.write(r.content)
+
+
+
+
+
+
+# with open('test/%s' % image_name, 'wb') as f:
+#     for chunk in r.iter_content(chunk_size=128):
+#         f.write(chunk)
 print('Saved %s' % image_name)
