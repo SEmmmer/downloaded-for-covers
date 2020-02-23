@@ -17,6 +17,10 @@ title = son_soup.find('span', {"class":"title"})
 new_title = title.get_text()
 print(new_title.strip())
 
+# get info of the video
+info = son_soup.find('p', {"id": "eow-description"})
+print(info)
+
 import os
 if not os.path.exists(new_title.strip()):
     os.makedirs(new_title.strip())
