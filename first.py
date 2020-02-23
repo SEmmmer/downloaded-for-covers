@@ -2,6 +2,7 @@
 from __future__ import print_function
 from bs4 import BeautifulSoup
 from urllib2 import urlopen
+import os
 import re
 import requests
 import sys
@@ -47,6 +48,11 @@ for son_url in l3:
     date2 = date.replace(':', '_').replace(' ', '_')
     print(date)
 
+    # does the file already exist?
+    if(os.path.exists("source/_posts/" + date2 + ".md")):
+        print("file already exist!!!!!!!!!!")
+        continue
+
     # get the title of the video and print it.
     title = son_soup.find('span', {"id":"eow-title"})
     title = title.get_text()
@@ -84,7 +90,10 @@ for son_url in l3:
         file.write("  - Youtube Streaming" + "\n")
         file.write("---" + "\n")
         file.write("\n")
+        file.write(str(son_url))
+        file.write("\n")
         file.write(str(info))
         file.close()
     print("Creat the .md file")
+    # TODO:local exam
 print("finished")
