@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 from __future__ import print_function
 from bs4 import BeautifulSoup
 from urllib2 import urlopen
@@ -9,8 +10,10 @@ son_html = urlopen(son_url).read().decode('utf-8')
 son_soup = BeautifulSoup(son_html, 'lxml')
 
 # get the date of the video
-date = son_soup.find('meta', {"itemprop":"datePublished"})
-print(date['content'])
+date = son_soup.find('meta', {"itemprop":"startDate"})
+date = date['content']
+date = date.replace('T', ' ')
+print(date.replace('+00:00', ''))
 
 # get the title of the video and print it.
 title = son_soup.find('span', {"class":"title"})
@@ -19,7 +22,7 @@ print(new_title.strip())
 
 # get info of the video
 info = son_soup.find('p', {"id": "eow-description"})
-print(info)
+# print(info)
 
 import os
 if not os.path.exists(new_title.strip()):
