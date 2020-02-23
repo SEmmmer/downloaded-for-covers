@@ -4,38 +4,57 @@ from bs4 import BeautifulSoup
 from urllib2 import urlopen
 import re
 import requests
+import sys
 
 son_url = 'https://www.youtube.com/watch?v=kDhtLZh7a7U&t=1719s'
 son_html = urlopen(son_url).read().decode('utf-8')
 son_soup = BeautifulSoup(son_html, 'lxml')
 
-# get the date of the video
+# get the date of the video and print it.
 date = son_soup.find('meta', {"itemprop":"startDate"})
 date = date['content']
 date = date.replace('T', ' ')
-print(date.replace('+00:00', ''))
+date = date.replace('+00:00', '')
+date2 = date.replace(':', '_').replace(' ', '_')
+print(date)
 
 # get the title of the video and print it.
 title = son_soup.find('span', {"class":"title"})
-new_title = title.get_text()
-print(new_title.strip())
+title = title.get_text()
+title = title.strip()
+print(title)
 
 # get info of the video
 info = son_soup.find('p', {"id": "eow-description"})
-# print(info)
+print("Catch the info")
 
-import os
-if not os.path.exists(new_title.strip()):
-    os.makedirs(new_title.strip())
-print("Creat and Exam the Dir Successfully")
-
-#get the url of the cover.
+# get the url of the cover.
 m = re.search('(?<=v=)[0-9a-zA-Z_]*', son_url)
 
-#download the cover
+# download the cover.
 cover_url = ('https://i.ytimg.com/vi/' + m.group(0) + '/maxresdefault.jpg')
 r = requests.get(cover_url, stream=True)
-image_name = (new_title.strip()+'.jpg')
-with open((new_title.strip()+'/'+image_name), 'wb') as f:
+image_name = (date2 + '.jpg')
+with open(('themes/hexo-theme-matery-develop/source/medias/covers/' + image_name), 'wb') as f:
     f.write(r.content)
 print('Saved %s' % image_name)
+
+# set the location of the cover.
+img = '/medias/covers/' + date2 + '.jpg'
+coverImg = img
+
+# creat the .md file.
+with open ("source/_posts/" + date2 + ".md", 'wb') as file:
+    file.write("---" + "\n")
+    file.write("title: " + title.encode('utf-8') + "\n")
+    file.write("date: " + date + "\n")
+    file.write("img: " + img + "\n")
+    file.write("cover: true" + "\n")
+    file.write("coverImg: " + img + "\n")
+    file.write("tags:" + "\n")
+    file.write("  - Youtube Streaming" + "\n")
+    file.write("---" + "\n")
+    file.write("\n")
+    file.write(str(info))
+    file.close()
+print("Creat the .md file")

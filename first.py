@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*
 from __future__ import print_function
-
 from bs4 import BeautifulSoup
 from urllib2 import urlopen
-
-# import requests
+import re
+import requests
+import sys
 
 html = urlopen("file:///Users/yangjinghua/Documents/a%20Python%20program/shirakamifubuki.htm")
 soup = BeautifulSoup(html, 'lxml')
@@ -24,25 +25,57 @@ for i in l2:
             l3.append(i)
             break
 
-for link in l3:
-    print(link)
-    print('\n')
-print("Get All URL")
-print("total =", len(l3))
+for son_url in l3:
+    print(son_url)
+    son_html = urlopen(son_url).read().decode('utf-8')
+    son_soup = BeautifulSoup(son_html, 'lxml')
 
-import os
-if not os.path.exists('ytb'):
-    os.makedirs('ytb')
-print("Creat and Exam the Dir Successfully")
+    # get the date of the video and print it.
+    date = son_soup.find('meta', {"itemprop":"startDate"})
+    date = date['content']
+    date = date.replace('T', ' ')
+    date = date.replace('+00:00', '')
+    date2 = date.replace(':', '_').replace(' ', '_')
+    print(date)
 
+    # get the title of the video and print it.
+    title = son_soup.find('span', {"class":"title"})
+    title = title.get_text()
+    title = title.strip()
+    print(title)
 
+    # get info of the video
+    info = son_soup.find('p', {"id": "eow-description"})
+    print("Catch the info")
 
-#     url = ul.find_all('img')
-#     for img in imgs:
-#         url = img['src']
-#         r = requests.get(url, stream=True)
-#         image_name = url.split('/')[-1]
-#         with open('~/img/%s' % image_name, 'wb') as f:
-#             for chunk in r.iter_content(chunk_size=128):
-#                 f.write(chunk)
-#         print('Saved %s' % image_name)
+    # get the url of the cover.
+    m = re.search('(?<=v=)[0-9a-zA-Z_]*', son_url)
+
+    # download the cover.
+    cover_url = ('https://i.ytimg.com/vi/' + m.group(0) + '/maxresdefault.jpg')
+    r = requests.get(cover_url, stream=True)
+    image_name = (date2 + '.jpg')
+    with open(('themes/hexo-theme-matery-develop/source/medias/covers/' + image_name), 'wb') as f:
+        f.write(r.content)
+    print('Saved %s' % image_name)
+
+    # set the location of the cover.
+    img = '/medias/covers/' + date2 + '.jpg'
+    coverImg = img
+
+    # creat the .md file.
+    with open ("source/_posts/" + date2 + ".md", 'wb') as file:
+        file.write("---" + "\n")
+        file.write("title: " + title.encode('utf-8') + "\n")
+        file.write("date: " + date + "\n")
+        file.write("img: " + img + "\n")
+        file.write("cover: true" + "\n")
+        file.write("coverImg: " + img + "\n")
+        file.write("tags:" + "\n")
+        file.write("  - Youtube Streaming" + "\n")
+        file.write("---" + "\n")
+        file.write("\n")
+        file.write(str(info))
+        file.close()
+    print("Creat the .md file")
+print("finished")
