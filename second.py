@@ -6,20 +6,29 @@ import re
 import requests
 import sys
 
-son_url = 'https://www.youtube.com/watch?v=kDhtLZh7a7U&t=1719s'
+son_url = 'https://www.youtube.com/watch?v=nGURIAA0cT0'
 son_html = urlopen(son_url).read().decode('utf-8')
 son_soup = BeautifulSoup(son_html, 'lxml')
 
 # get the date of the video and print it.
+fake_random = 1
 date = son_soup.find('meta', {"itemprop":"startDate"})
-date = date['content']
-date = date.replace('T', ' ')
-date = date.replace('+00:00', '')
+if (str(date) == 'None') :
+    date = son_soup.find('meta', {"itemprop":"datePublished"})
+    date = date['content']
+    date = (date + " 00:00:0" + str(fake_random))
+    fake_random += 1
+    if(fake_random == 9):
+        fake_random = 1
+else:
+    date = date['content']
+    date = date.replace('T', ' ')
+    date = date.replace('+00:00', '')
 date2 = date.replace(':', '_').replace(' ', '_')
 print(date)
 
 # get the title of the video and print it.
-title = son_soup.find('span', {"class":"title"})
+title = son_soup.find('span', {"id":"eow-title"})
 title = title.get_text()
 title = title.strip()
 print(title)
