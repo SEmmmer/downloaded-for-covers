@@ -17,7 +17,7 @@ img = '/medias/covers/' + date2 + '.jpg'
 coverImg = img
 with open ("source/_posts/" + date2 + ".md", 'wb') as file:
     file.write("---" + "\n")
-    file.write("title: " + title + "\n")
+    file.write("title: " + "'" + title + "'" + "\n")
     file.write("date: " + date + "\n")
     file.write("img: " + img + "\n")
     file.write("cover: true" + "\n")
