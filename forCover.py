@@ -78,8 +78,9 @@ for son_url in l3:
 
     # check uploader
     # can change to other uploader
-    uploader = son_soup.find('a', {"class": "yt-uix-sessionlink spf-link"})
+    uploader = son_soup.find('div', {"class": "yt-user-info"}).find('a', {'class': 'yt-uix-sessionlink'})
     uploader = str(uploader['href'])
+    print (uploader)
     if uploader != '/channel/UCdn5BQ06XqgXoAxIhbqw5Rg':
         continue
 
