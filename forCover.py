@@ -75,6 +75,7 @@ for son_url in l3:
                 break
         else:
             ifRequest = True
+            time = 0
 
     # check uploader
     # can change to other uploader
@@ -110,5 +111,6 @@ for son_url in l3:
                 break
         else:
             ifRequest = True
+            time = 0
             print("下载成功")
 print('程序结束')
