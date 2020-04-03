@@ -81,9 +81,10 @@ for son_url in l3:
     # can change to other uploader
     uploader = son_soup.find('div', {"class": "yt-user-info"}).find('a', {'class': 'yt-uix-sessionlink'})
     uploader = str(uploader['href'])
-    print (uploader)
     if uploader != '/channel/UCdn5BQ06XqgXoAxIhbqw5Rg':
         continue
+    # 更改油管主时务必注意这里
+    ###################################################
 
     cover_url = ('https://i.ytimg.com/vi/' + image.group(0) + '/maxresdefault.jpg')
     image_name = (str(date) + '.jpg')
