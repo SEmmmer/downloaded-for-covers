@@ -2,8 +2,9 @@
 from __future__ import print_function
 from bs4 import BeautifulSoup
 from urllib2 import urlopen
-import os
+import urllib2
 import re
+import os
 
 if not os.path.exists('./video.htm'):
     print('请将 htm 格式的网页命名为 video.htm 后放在这个文件夹')
@@ -71,6 +72,7 @@ for son_url in l3:
                 print("错误：该链接可能不存在，请在程序结束后检查")
                 with open("errorList.txt", "ab") as code:
                     code.write('https://www.youtube.com/watch?v=' + image.group(0) + ' 网页不存在\n')
+                    code.close()
                 time = 0
                 break
         else:
@@ -87,6 +89,9 @@ for son_url in l3:
     ###################################################
 
     cover_url = ('https://i.ytimg.com/vi/' + image.group(0) + '/maxresdefault.jpg')
+    sdd_cover_url = ('https://i.ytimg.com/vi/' + image.group(0) + '/sddefault.jpg')
+    hq_cover_url = ('https://i.ytimg.com/vi/' + image.group(0) + '/hqdefault.jpg')
+    mq_cover_url = ('https://i.ytimg.com/vi/' + image.group(0) + '/mqdefault.jpg')
     image_name = (str(date) + '.jpg')
     buffer_image_name = (image.group(0) + '.jpg')
 
@@ -98,16 +103,25 @@ for son_url in l3:
             data = f.read()
             with open('tmp/' + image_name, 'wb') as code:
                 code.write(data)
+                code.close()
             with open('buffer/' + buffer_image_name, 'wb') as code:
                 code.write(data)
-        except:
+                code.close()
+        except(TypeError, urllib2.HTTPError):
             time += 1
             ifRequest = False
             print("获取封面失败，重新获取")
-            if time >= 5:
+            if time >= 5 & time < 10:
+                cover_url = sdd_cover_url
+            if time >= 10 & time < 15:
+                cover_url = hq_cover_url
+            if time >= 15 & time < 20:
+                cover_url = mq_cover_url
+            if time >= 20:
                 print("错误：该视频可能无封面，请在程序结束后检查")
                 with open("errorList.txt", "ab") as code:
                     code.write('https://www.youtube.com/watch?v=' + image.group(0) + ' 封面不存在\n')
+                    code.close()
                 time = 0
                 break
         else:
